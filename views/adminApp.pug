@@ -1,0 +1,95 @@
+extends adminlayout
+
+block content
+	div(class='container main-content')
+		if artAlbSong !==null
+			each val, index in artAlbSong
+				div(class='col-md-12 admin-all' id=index+'block' )
+					div.col-md-4
+						input(value=val.artist._id id=index+'newArtistId' type='hidden')
+						label(for='newArtistName') Ime izvodjača:
+						input(name='newArtistName' id=index+'newArtistName' class='form-control' type='text' value=val.artist.name)
+						label(for='newArtistGenre') Zanr izvodjača:
+						input(name='newArtistGenre' id=index+'newArtistGenre' class='form-control' type='text' value=val.artist.genre)
+						label(for='newArtistCountry') Drzava izvodjača:
+						input(name='newArtistCountry' id=index+'newArtistCountry' class='form-control' type='text' value=val.artist.country)
+						label(for='newArtistContinent') Kontinent izvodjača:
+						input(name='newArtistContinent' id=index+'newArtistContinent' class='form-control' type='text' value=val.artist.continent)
+					div.col-md-4
+						input(value=val.album._id id=index+'newAlbumtId' type='hidden')
+						label(for='newAlbumName') Naziv albuma:
+						input(name='newAlbumName' id=index+'newAlbumName' class='form-control' type='text' value=val.album.name)
+						label(for='newAlbumYear') Godina izdavanja albuma:
+						input(name='newAlbumYear' id=index+'newAlbumYear' class='form-control' type='text' value=val.album.year)
+						label(for='newAlbumNumSongs') Broj pesama:
+						input(name='newAlbumNumSongs' id=index+'newAlbumNumSongs' class='form-control' type='text' value=val.album.numSongs)
+						label(for='newAlbumGenre') Žanr:
+						input(name='newAlbumGenre' id=index+'newAlbumGenre' class='form-control' type='text' value=val.album.genre)
+					div.col-md-4
+						input(value=val.song._id id=index+'newSongId' type='hidden')
+						label(for='AddSongName') Naziv Pesme
+						input(name='AddSongName' id=index+'AddSongName' class='form-control' type='text' value=val.song.name)
+						label(for='AddSongLength') Trajanje pesme
+						input(name='AddSongLength' id=index+'AddSongLength' class='form-control' type='text' value=val.song.length)
+						label(for='AddSongLink') Link pesme
+						input(name='AddSongLink' id=index+'AddSongLink' class='form-control' type='text' value=val.song.link)
+						label(for='AddSongTags') Tagovi
+						input(name='AddSongTags' id=index+'AddSongTags' class='form-control' type='text' value=val.song.tags)
+					div.col-md-12
+						label(for='AddSongText') Tekst pesme
+						textarea.form-control.song-text(name='AddSongText' id=index+'AddSongText'  class="widgEditor nothing")=val.song.text
+					div.col-md-4.col-md-offset-4.butt-add
+						button.form-control.btn.btn-success(type='submit' onclick='approve(this.id);' id=index) Odobri
+	script.
+		function approve(id)
+		{
+			var artIDId='#'+id+'newArtistId';
+			var artNamId='#'+id+'newArtistName';
+			var artGenId='#'+id+'newArtistGenre';
+			var artCouId='#'+id+'newArtistCountry';
+			var artConId='#'+id+'newArtistContinent';
+
+			var albIDid='#'+id+'newAlbumtId';
+			var albNamid='#'+id+'newAlbumName';
+			var albYeaid='#'+id+'newAlbumYear';
+			var albNumSonid='#'+id+'newAlbumNumSongs';
+			var albGenid='#'+id+'newAlbumGenre';
+
+			var sonIDid='#'+id+'newSongId';
+			var sonNamid='#'+id+'AddSongName';
+			var sonLenid='#'+id+'AddSongLength';
+			var sonLinid='#'+id+'AddSongLink';
+			var sonTagid='#'+id+'AddSongTags';
+			var sonTexid='#'+id+'AddSongText';
+
+			var artistId=$(artIDId).val();
+			var artistName=$(artNamId).val();
+			var artistGenre=$(artGenId).val();
+			var artistCountry=$(artCouId).val();
+			var artistContin=$(artConId).val();
+
+			var albumId=$(albIDid).val();
+			var albumName=$(albNamid).val();
+			var albumYear=$(albYeaid).val();
+			var albumNumSongs=$(albNumSonid).val();
+			var albumGenre=$(albGenid).val();
+
+			var songId=$(sonIDid).val();
+			var songName=$(sonNamid).val();
+			var songLength=$(sonLenid).val();
+			var songLink=$(sonLinid).val();
+			var songTag=$(sonTagid).val();
+			var songTex=$(sonTexid).val();
+
+			
+			var forUpdate={artistId: artistId, albumId: albumId, songId: songId, artist: {name: artistName, genre: artistGenre, country: artistCountry, continent: artistContin}, album: {name: albumName, year: albumYear, numSongs: albumNumSongs, genre: albumGenre}, song: {name: songName, length: songLength, link: songLink, text: songTex, tags: songTag, status: "active"}};
+
+			console.log(forUpdate);
+			$.post("/admin/updateall", forUpdate);
+			 /* .done(function( data ) {
+			    alert( "Data Loaded: " + data );
+			  });*/
+
+			var blockId='#'+id+'block';
+			$(blockId).hide();
+		}

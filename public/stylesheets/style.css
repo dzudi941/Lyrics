@@ -1,0 +1,266 @@
+body {
+  /*padding: 50px;*/
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  /*background-color: #d6d6c2;*/
+  background: url("../images/sativa.png");
+}
+
+a {
+  color: #00B7FF;
+}
+#main-search
+{
+	height: 60px;
+	border-style: outset;
+	font-size: 20px;
+}
+#logo
+{
+	font-family: Papyrus, fantasy;
+	font-size: 44px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: 500;
+	line-height: 26.4px;
+}
+#logo a
+{
+	text-decoration:none;
+}
+.main-content
+{
+	margin-top: 60px;
+}
+.newest
+{
+	margin-top: 0px;
+	background-color: #FFFFFF;
+	margin-bottom: 100px;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+.songs-list
+{
+	margin-top: 20px;
+	margin-bottom: 100px;
+}
+.butt-add
+{
+	margin-top: 20px;
+}
+.song-text
+{
+	min-height: 200px;
+}
+.footer
+{
+	height: 150px;
+	background-color: black;
+	margin-top: 200px;
+}
+.admin-all
+{
+	margin-bottom: 50px;
+}
+.text-conteiner
+{
+	
+	margin-bottom: 200px;
+}
+.space
+{
+	margin-top: 500px;
+}
+.song-text
+{
+	background-color: white;
+}
+.ime-song
+{
+
+}
+.text-song
+{
+	margin-bottom: 20px;
+	min-height: 150px;
+}
+.comments
+{
+	margin-top: 50px;
+	background-color: white;
+}
+.one-comment
+{
+	margin-top: 20px;
+	padding-left: 10px;
+}
+.search-block
+{
+	display: block;
+	margin-bottom: 20px;
+}
+
+
+
+
+/* custom inclusion of right, left and below tabs */
+
+.tabs-below > .nav-tabs,
+.tabs-right > .nav-tabs,
+.tabs-left > .nav-tabs {
+  border-bottom: 0;
+}
+
+.tab-content > .tab-pane,
+.pill-content > .pill-pane {
+  display: none;
+}
+
+.tab-content > .active,
+.pill-content > .active {
+  display: block;
+}
+
+.tabs-below > .nav-tabs {
+  border-top: 1px solid #ddd;
+}
+
+.tabs-below > .nav-tabs > li {
+  margin-top: -1px;
+  margin-bottom: 0;
+}
+
+.tabs-below > .nav-tabs > li > a {
+  -webkit-border-radius: 0 0 4px 4px;
+     -moz-border-radius: 0 0 4px 4px;
+          border-radius: 0 0 4px 4px;
+}
+
+.tabs-below > .nav-tabs > li > a:hover,
+.tabs-below > .nav-tabs > li > a:focus {
+  border-top-color: #ddd;
+  border-bottom-color: transparent;
+}
+
+.tabs-below > .nav-tabs > .active > a,
+.tabs-below > .nav-tabs > .active > a:hover,
+.tabs-below > .nav-tabs > .active > a:focus {
+  border-color: transparent #ddd #ddd #ddd;
+}
+
+.tabs-left > .nav-tabs > li,
+.tabs-right > .nav-tabs > li {
+  float: none;
+}
+
+.tabs-left > .nav-tabs > li > a,
+.tabs-right > .nav-tabs > li > a {
+  min-width: 74px;
+  margin-right: 0;
+  margin-bottom: 3px;
+}
+
+.tabs-left > .nav-tabs {
+  float: left;
+  margin-right: 19px;
+  border-right: 1px solid #ddd;
+}
+
+.tabs-left > .nav-tabs > li > a {
+  margin-right: -1px;
+  -webkit-border-radius: 4px 0 0 4px;
+     -moz-border-radius: 4px 0 0 4px;
+          border-radius: 4px 0 0 4px;
+}
+
+.tabs-left > .nav-tabs > li > a:hover,
+.tabs-left > .nav-tabs > li > a:focus {
+  border-color: #eeeeee #dddddd #eeeeee #eeeeee;
+}
+
+.tabs-left > .nav-tabs .active > a,
+.tabs-left > .nav-tabs .active > a:hover,
+.tabs-left > .nav-tabs .active > a:focus {
+  border-color: #ddd transparent #ddd #ddd;
+  *border-right-color: #ffffff;
+}
+
+.tabs-right > .nav-tabs {
+  float: right;
+  margin-left: 19px;
+  border-left: 1px solid #ddd;
+}
+
+.tabs-right > .nav-tabs > li > a {
+  margin-left: -1px;
+  -webkit-border-radius: 0 4px 4px 0;
+     -moz-border-radius: 0 4px 4px 0;
+          border-radius: 0 4px 4px 0;
+}
+
+.tabs-right > .nav-tabs > li > a:hover,
+.tabs-right > .nav-tabs > li > a:focus {
+  border-color: #eeeeee #eeeeee #eeeeee #dddddd;
+}
+
+.tabs-right > .nav-tabs .active > a,
+.tabs-right > .nav-tabs .active > a:hover,
+.tabs-right > .nav-tabs .active > a:focus {
+  border-color: #ddd #ddd #ddd transparent;
+  *border-left-color: #ffffff;
+}
+.filter
+{
+  background-color: white;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+#login
+{
+  float: right;
+}
+.add-song-text
+{
+  background-color: white;
+  margin-top: 20px;
+}
+.login-button
+{
+  margin-top: 20px;
+}
+.edit-song
+{
+  float: right;
+  margin-left: 10px;
+}
+.btn-info
+{
+  background-color: #bad4ff;
+}
+.users
+{
+  background-color: white;
+}
+.chat
+{
+  height: 200px;
+}
+.chat-back
+{
+  height: 300px;
+}

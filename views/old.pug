@@ -1,0 +1,16 @@
+each val, index in all[0].song.comments
+					div.one-comment
+						h5 Komentar korisnika #{val.name}:
+						h5=val.comment
+						a(href='#' onclick='return showblock(this.id)' id=index) Odgovori
+						div.odgovori-blok.col-md-12(style='display:none' id='block-odg'+index)
+							input(type='hidden' id=index+'songid' value=all[0].song._id)
+							div.col-md-3
+								input.form-control(type='text', id=index+'name')
+							div.col-md-7
+								input.form-control(type='text', id=index+'comment')
+							div.col-md-2
+								button.form-control.btn.btn-success(onclick='odgovori(this.id);' id=index) Odg
+
+
+	-function printComments(comments, songID, deepth, label, uniqueID){var html=""; var uniqueID1=uniqueID;  var border=""; if (deepth>0) {border="border-style: none none none dotted;"}   comments.forEach(function(val, index){ uniqueID1+=""+index;html+="<div class='one-comment' style='margin-left: "+deepth*10+"px; "+border+"'><h5> Komentar korisnika "+ val.name+":  "+getDate(val.date)+"</h5><h5>"+val.comment+"</h5><a href='#' onclick='return showblock(this.id)' id='"+uniqueID1+"'>Odgovori</a><div class='odgovori-blok col-md-12' style='display:none' id='block-odg"+uniqueID1+"'><input type='hidden' id='"+uniqueID1+"songid' value='"+songID+"'> <div class='col-md-3'><input class='form-control' type='text' id='"+uniqueID1+"name'></div> <div class='col-md-7'><input class='form-control' type='text' id='"+uniqueID1+"comment'></div> <div class='col-md-2'><button class='form-control btn btn-success' onclick='odgovori(this.id);' id='"+uniqueID1+"'> Odg</button></div> </div> <input type='hidden' value='"+deepth+"' id='deepth"+uniqueID1+"'><input type='hidden' value='"+index+"' id='index"+uniqueID1+"'> <input type='hidden' value='"+label+"."+index+".answers' id='label"+uniqueID1+"'> </div>"; if(val.answers!==undefined){html+=printComments(val.answers, songID, deepth+1, label+"."+index+".answers", uniqueID1)} uniqueID1=uniqueID;}); return html;}

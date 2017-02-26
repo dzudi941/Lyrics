@@ -1,0 +1,128 @@
+extends adminlayout
+
+block content
+	div.container
+		div.col-md-12
+			table
+				tr
+					th username
+					th akcije
+				each val in users
+					tr
+						td
+							div.col-md-1=val.username
+							if loggedIn
+								if loggedIn.username != val.username
+									div.col-md-6.chat-back
+										-var iframeCont="";
+										if loggedIn[val.username]!=null
+											each msg in loggedIn[val.username]
+												-iframeCont+=msg.from+": "+msg.text+"<br>";
+										//-console.log(iframeCont)
+										iframe.form-control.chat(height="400" scrolling="yes" srcdoc=""+iframeCont+"" id='blok'+val.username) 
+										input(class='form-control' onkeydown="if (event.keyCode == 13) { sendMsg(this.name); return false; }" name=val.username id='myMsg'+val.username)
+										button.form-control.btn.btn-success(onclick='sendMsg(this.id)' id=val.username) Posalji
+						if loggedIn
+							if loggedIn.username == val.username
+								td To ste vi
+								h1=loggedIn.username
+							else
+								td 
+									p(class='userStatus' id='status'+val.username) offline
+		if loggedIn
+			input(type='hidden' id='logUserID' value=loggedIn.username)
+		div.col-md-12
+			br
+			h3 Dodaj novog korisnika
+			div.col-md-3
+				label Username
+				input(type='text')#new-username.form-control
+			div.col-md-3
+				label password
+				input(type='password')#new-password.form-control
+			div.col-md-3
+				label ponovite password
+				input(type='password')#new-re-password.form-control
+			div.col-md-3
+				label a
+				button.form-control.btn.btn-success(onclick="addUser()") Dodaj
+			div
+				p#message
+		-function sortByKey(array, key) {return array.sort(function(a, b) {var x = a[key]; var y = b[key];return ((x < y) ? -1 : ((x > y) ? 1 : 0));});}
+	script(src="/socket.io/socket.io.js")
+	script.
+		//$(document).ready(function() {
+		function addUser()
+		{
+			var username = $('#new-username').val();
+			var password = $('#new-password').val();
+			var re_password = $('#new-re-password').val();
+			if(password != re_password || password == '' || re_password == '')
+				alert("Neispravan password");
+			else
+				{
+					var userData = {username: username, password: password};
+					$.post("/admin/addNewUser", userData, function(data){
+						//alert(data.message);
+						$('#message').text(data.message);
+					});
+				}
+		}
+		
+			var myid= $('#logUserID').val();
+			if(myid=='')
+				myid="svi";
+			//alert(myid);
+			var socket = io.connect('http://localhost:3000', {'sync disconnect on unload': true });
+			socket.emit('my id', {myId: myid});
+			  socket.on('my message', function (data) {
+			    console.log(data);
+			  });
+			
+			function sendMsg(id)
+			{
+
+			  var msg = $('#myMsg'+id).val();
+			  $('#blok'+id).contents().find('body').append(myid+": "+msg+ "<br>");
+			  //alert(msg);
+				socket.emit('sendToUser', {myid: myid, userId: id, myMsg: msg});
+				var forUpd={};
+				forUpd[myid]={from: myid, text: msg};
+				$.post('/admin/newMsg', {userId: id, forUpd: forUpd});
+				$('#myMsg'+id).val('');
+				var $contents = $('#blok'+id).contents();
+				$contents.scrollTop($contents.height());
+			}
+			socket.on('messageForMe', function (data) {
+			console.log(data);
+			$('#blok'+data.toUsername).contents().find('body').append( data.toUsername+": "+data.msg+ "<br>");
+			var $contents = $('#blok'+data.toUsername).contents();
+				$contents.scrollTop($contents.height());
+			var forUpd={};
+				forUpd[data.fromUsername]={from: data.toUsername, text: data.msg};
+			$.post('/admin/newMsgSameUser', {userId: data.toUsername, forUpd: forUpd});
+			});
+
+
+
+			/*$(window).on("unload", function(e) {
+			    //alert("call");
+			    //console.log("this will be triggered");
+			    socket.emit('UserDisconnected', {myId: myid});
+			});*/
+			/*socket.on('GetLoggedInUsers', function (data) {
+			console.log('usao u get logged in00');
+				socket.emit('UserDisconnected', {myId: myid});
+			});*/
+			socket.on('updateAvailableUsers', function (data) {
+				console.log(data);
+				//alert(data[2]);
+				$('.userStatus').text("offline").css("color", "black");
+				$.each( data, function( key, value ) {
+				//alert(value);
+				$('#status'+value).text("online").css("color", "red");
+				});
+			});
+
+		//});
+

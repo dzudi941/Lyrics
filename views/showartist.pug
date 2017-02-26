@@ -1,0 +1,40 @@
+extends layout
+
+block content
+	
+	div.container
+		div.col-md-12
+			h1 Naziv: #{artist.name}
+			h2 Zanr: #{artist.genre}
+			h3 Broj albuma: #{ Object.keys(albums).length }
+		div.col-md-12
+			div(class="tabbable tabs-left")
+				ul(class="nav nav-tabs")
+					each val, index in albums
+						if val.album._id.equals(currAlbum)
+							li(class='active')
+								a(data-toggle="tab" href="#alb"+index)=val.album.name
+						else
+							li
+								a(data-toggle="tab" href="#alb"+index)=val.album.name
+				div.col-md-8
+					div(class="tab-content")
+						each val, index in albums
+							if val.album._id.equals(currAlbum)
+								div(class="tab-pane active" id="alb"+index) 
+									h1 Zanr: #{val.album.genre}
+									h4 Broj pesama: #{ Object.keys(val.songs).length }
+									h1 Pesme:
+									
+									each song, indexS in val.songs
+										h4
+											a(href="/showSong/"+song._id)=song.name
+							else
+								div(class="tab-pane" id="alb"+index) 
+									h1 Zanr: #{val.album.genre}
+									h4 Broj pesama: #{ Object.keys(val.songs).length }
+									h1 Pesme:
+									
+									each song, indexS in val.songs
+										h4
+											a(href="/showSong/"+song._id)=song.name

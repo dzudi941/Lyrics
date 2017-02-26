@@ -1,0 +1,98 @@
+extends layout
+
+block content
+	div(class='container main-content')
+		form(action='/addNewSong' method='post')
+			div.col-md-4
+				label(for='izvodjaci') Odaberite postojećeg izvodjača:
+				select(name='izvodjac' class='form-control' id='izvodjaci')
+					option(value='-1') Postojeći izvodjač
+					each val in artists
+						option(value=val._id)=val.name
+				div.artist-col
+					label(for='newArtistName') Ili dodajte novog izvodjača:
+					br
+					label(for='newArtistName') Ime izvodjača:
+					input(name='newArtistName' id='newArtistName' class='form-control' type='text')
+					label(for='newArtistGenre') Zanr izvodjača:
+					input(name='newArtistGenre' id='newArtistGenre' class='form-control' type='text')
+					label(for='newArtistCountry') Drzava izvodjača:
+					input(name='newArtistCountry' id='newArtistCountry' class='form-control' type='text')
+					label(for='newArtistContinent') Kontinent izvodjača:
+					input(name='newArtistContinent' id='newArtistContinent' class='form-control' type='text')
+			div.col-md-4
+				label(for='album') Izaberite album
+				select(name='album' class='form-control' id='album')
+					option(value='-1') Postojeći album	
+				div.album-col
+					label(for='newAlbumName') Ili dodajte novi album:
+					br
+					label(for='newAlbumName') Naziv albuma:
+					input(name='newAlbumName' id='newAlbumName' class='form-control' type='text')
+					label(for='newAlbumYear') Godina izdavanja albuma:
+					input(name='newAlbumYear' id='newAlbumYear' class='form-control' type='text')
+					label(for='newAlbumNumSongs') Broj pesama:
+					input(name='newAlbumNumSongs' id='newAlbumNumSongs' class='form-control' type='text')
+					label(for='newAlbumGenre') Žanr:
+					input(name='newAlbumGenre' id='newAlbumGenre' class='form-control' type='text')
+				div#albumSongs
+			div.col-md-4
+				label(for='AddSongName') Naziv Pesme
+				input(name='AddSongName' class='form-control' type='text')
+				label(for='AddSongLength') Trajanje pesme
+				input(name='AddSongLength' class='form-control' type='text')
+				label(for='AddSongLink') Link pesme
+				input(name='AddSongLink' class='form-control' type='text')
+				label(for='AddSongTags') Tagovi
+				input(name='AddSongTags' class='form-control' type='text')
+			div.col-md-12.add-song-text
+				label(for='AddSongText') Tekst pesme
+				textarea.form-control.song-text(name='AddSongText' id="noise"  class="widgEditor nothing")
+			div.col-md-4.col-md-offset-4.butt-add
+				button.form-control.btn.btn-success(type='submit') Dodaj
+	//div.songs-list.container
+		div.col-md-12
+			table#songs
+				tr
+					th Pesma
+					th album
+					th izvodjac
+	script.
+			$(document).ready(function() { //run on document.ready
+			  $("#izvodjaci").change(function() { //this occurs when select 1 changes
+			  	if($(this).val()==-1)
+			  		{
+					$('.artist-col').show();
+					$("#albumSongs").html("");
+			  		$('.album-col').show();
+					}
+				else
+					{
+			  		$('.artist-col').hide();
+			  		$("#albumSongs").html("");
+			  		$('.album-col').show();
+					}
+			  	
+			  	var parameters = { id: $(this).val() };
+			  	$("#album").html("<option value='-1'>Postojeći album</option>");
+			  	$.get( '/getAlbums',parameters, function(data) {$.each( data, function( key, value ) {
+			  		$("#album").append($("<option></option>").attr("value",value._id).text(value.name));
+			  		}); 
+			  	});
+			  });
+			  $("#album").change(function() { //this occurs when select 1 changes
+			  	if($(this).val()==-1)
+					$('.album-col').show();
+				else
+			  		$('.album-col').hide();
+			  	var parameters = { id: $(this).val() };
+			  	$.get( '/getSongs',parameters, function(data) {var allSongs=''; $.each( data, function( key, value ) {
+			  		allSongs+="<h4>"+value.name+"</h4>";
+			  		}); 
+			  		$("#albumSongs").html(allSongs);
+			  	});
+			  });
+			
+			
+			
+			});

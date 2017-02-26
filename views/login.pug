@@ -1,0 +1,12 @@
+extends layout
+
+block content
+    div.container
+        form(action="/login", method="POST")
+            div.col-md-6
+                label(for="username") Username: 
+                input(name="username" type='text' class='form-control')
+                label(for="password") Password: 
+                input(name="password" type='password' class='form-control')
+        
+                button(type="submit" value='submit' class='form-control login-button btn btn-primary') Uloguj se

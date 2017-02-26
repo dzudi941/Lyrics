@@ -1,0 +1,35 @@
+extends adminlayout
+
+block content
+	div.container
+		div.songs-list
+				table#songs
+					tr
+						th Pesma
+						th Album
+						th Izvođač
+					each val in artAlbSong
+						tr
+							td
+								a(href="/showSong/"+val.song._id)=val.song.name
+								a(class="glyphicon glyphicon-pencil edit-song" href="#" onclick="editSong(this.id); return false;" id=val.song._id) Izmeni
+								a(class="glyphicon glyphicon-pencil edit-song" href="" onclick='editSongAndGo(this.id)' id=val.song._id) Vodi me u izmeni
+							td(onclick="javascript:window.location.href='/showAlbum/"+val.album._id+"'; return false;" style='cursor:pointer')=val.album.name
+							td(onclick="javascript:window.location.href='/showArtist/"+val.artist._id+"'; return false;" style='cursor:pointer')=val.artist.name
+	script.
+		function editSongAndGo(id)
+		{
+			var songId={songId: id};
+		 	$.post("/admin/editSongAndGo", songId, function(data){
+		 		if(data.status=="OK")
+		 			return window.location.href='/admin/waiting';
+		 	});
+		}
+		function editSong(id)
+		{
+			var songId={songId: id};
+		 	$.post("/admin/editSong", songId, function(data){
+		 		//if(data.status=="OK")
+		 			
+		 	});
+		}

@@ -1,0 +1,66 @@
+extends layout
+
+block content
+	-function printComments(comments, songID, deepth, label, uniqueID){var html=""; var val; var uniqueID1=uniqueID;  var border=""; if (deepth>0) {border="border-style: none none none dotted;"}  for (var index = comments.length - 1; index >= 0; index--) {val=comments[index]; uniqueID1+=""+index;html+="<div class='one-comment' style='margin-left: "+deepth*10+"px; "+border+"'><h5> Komentar korisnika "+ val.name+":  "+getDate(val.date)+"</h5><h5>"+val.comment+"</h5><a href='#' onclick='return showblock(this.id)' id='"+uniqueID1+"'>Odgovori</a><div class='odgovori-blok col-md-12' style='display:none' id='block-odg"+uniqueID1+"'><input type='hidden' id='"+uniqueID1+"songid' value='"+songID+"'> <div class='col-md-3'><input class='form-control' type='text' id='"+uniqueID1+"name'></div> <div class='col-md-7'><input class='form-control' type='text' id='"+uniqueID1+"comment'></div> <div class='col-md-2'><button class='form-control btn btn-success' onclick='odgovori(this.id);' id='"+uniqueID1+"'> Odg</button></div> </div> <input type='hidden' value='"+deepth+"' id='deepth"+uniqueID1+"'><input type='hidden' value='"+index+"' id='index"+uniqueID1+"'> <input type='hidden' value='"+label+"."+index+".answers' id='label"+uniqueID1+"'> </div>"; if(val.answers!==undefined){html+=printComments(val.answers, songID, deepth+1, label+"."+index+".answers", uniqueID1)} uniqueID1=uniqueID;} return html;}
+	div(class='container main-content')
+		div.col-md-6.song-text
+			h2 Naziv: #{all[0].song.name}
+			h4 Album: #{all[0].album.name}
+			h5 Izvodjač: #{all[0].artist.name}
+			div.col-md-5.col-md-offset-1.text-conteiner!=all[0].song.text
+		div.col-md-6
+			if all[0].song.link.includes("youtube")
+				iframe(width="540" height="315" frameborder="0" allowfullscreen src=all[0].song.link )
+			div.comments.col-md-12
+				//-all[0].song.comments.reverse();
+				if all[0].song.comments !== undefined
+					!=printComments(all[0].song.comments, all[0].song._id, 0, "comments", "")
+				
+		div.col-md-12
+			h1 Ostavite komentar
+			form(method='POST' action='/showSong/addComent')
+				input(type='hidden' name='songId' value=all[0].song._id)
+				div.col-md-12
+					textarea.form-control.text-song(name='komentar')
+				div.col-md-6.ime-song
+					input.form-control(name='ime' placeholder='Vase ime')
+				div.col-md-6
+					button.form-control.btn.btn-success Prokomentariši
+		
+		-function getDate(dateO){if (dateO!==undefined) {var times=parseInt(dateO); var date=new Date(times); var hours = date.getHours(); var minutes = "0" + date.getMinutes(); var seconds = "0" + date.getSeconds(); var year = date.getFullYear(); var day = date.getUTCDate();  var month = date.getUTCMonth() + 1; return hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2)+", "+year+"/" + day +"/" + month;} else {return "";}}
+	script.
+		function odgovori(index)
+		{
+			var nameId='#'+index+"name";
+			var commentId='#'+index+"comment";
+			var songId='#'+index+"songid";
+			var deepthId='#deepth'+index;
+			var indexId='#index'+index;
+			var labelId='#label'+index;
+
+			var name=$(nameId).val();
+			var comment=$(commentId).val();
+			var songIDid=$(songId).val();
+			var deepth=$(deepthId).val();
+			var index=$(indexId).val();
+			var label=$(labelId).val();
+			//alert(label);
+			//alert(deepth);
+			//alert(name);
+			//alert(comment);
+			//var commLab="comments."+index;
+			var forUpd={};
+			//var date = new Date(year, month, day, hours, minutes, seconds, milliseconds);
+			forUpd[label]={name: name, comment: comment, date: + new Date()};
+
+			var commentUpd={songId: songIDid, forUpd: forUpd };
+			console.log(commentUpd);
+			$.post("/showSong/updatecomment", commentUpd);
+			location.reload();
+		}
+		function showblock(index)
+		{
+			var blockId='#block-odg'+index;
+			$(blockId).css("display", "initial");
+			return false;
+		}

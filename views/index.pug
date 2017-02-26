@@ -1,0 +1,128 @@
+extends layout
+
+block content
+	div(class='container main-content')
+		form
+			input(type='text' class='form-control' id='main-search' onkeyup='search(this.value)' placeholder='Pretraži')
+		div.container
+		button(data-toggle="collapse" data-target="#filter" href="" onclick="return false" class="form-control glyphicon glyphicon-chevron-down") Filter
+		div.col-md-12.filter#filter.collapse
+			-var uniqueContinents=[]
+			each val, index in songsNewest
+				-if(uniqueContinents.indexOf(val.artist.continent) === -1)
+					-uniqueContinents.push(val.artist.continent)
+			label Kontinet:
+			select#filterContinent
+				option(value=0) Svi
+				each val,index in uniqueContinents
+					option(value=val)=val
+			-var uniqueCountries=[]
+			each val in songsNewest
+				-if(uniqueCountries.indexOf(val.artist.country) === -1)
+					-uniqueCountries.push(val.artist.country)
+			label Drzava:
+			select#filterCountry
+				option(value=0) Sve
+				each val, index in uniqueCountries
+					option(value=val)=val
+			label Godina od:
+			input#yearFrom
+			label do:
+			input#yearTo
+			label Žanr:
+			-var uniqueGenres=[]
+			each val in songsNewest
+				-if(uniqueGenres.indexOf(val.album.genre)=== -1)
+					-uniqueGenres.push(val.album.genre)
+			each val in uniqueGenres
+				label=val+":"
+				input(type='checkbox' class='genre' value=val)
+		div.main-content
+			div.col-md-12
+				div.col-md-4.search-block#search-songs
+				div.col-md-4.search-block#search-albums
+				div.col-md-4.search-block#search-artists
+				
+				
+			div(class='col-md-6  newest')
+				h1 Najpopularnije
+				div.songs-list
+					table#songs
+						tr
+							th Pesma
+							th Album
+							th Izvođač
+						each val in songsViews
+							tr
+								td( onclick="javascript:window.location.href='/showSong/"+val.song._id+"'; return false;" style='cursor:pointer')=val.song.name
+								td( onclick="javascript:window.location.href='/showArtist/"+val.artist._id+"/"+val.album._id+"'; return false;" style='cursor:pointer')=val.album.name
+								td( onclick="javascript:window.location.href='/showArtist/"+val.artist._id+"'; return false;" style='cursor:pointer')=val.artist.name
+			div(class='col-md-6  newest')
+				h1 Najnovije
+				div.songs-list
+					table#songs
+						tr
+							th Pesma
+							th Album
+							th Izvođač
+						each val in songsNewest
+							tr
+								td( onclick="javascript:window.location.href='/showSong/"+val.song._id+"'; return false;" style='cursor:pointer')=val.song.name
+								td( onclick="javascript:window.location.href='/showAlbum/"+val.album._id+"'; return false;" style='cursor:pointer')=val.album.name
+								td( onclick="javascript:window.location.href='/showArtist/"+val.artist._id+"'; return false;" style='cursor:pointer')=val.artist.name
+	script.
+		function search(key)
+		{
+		//alert(valu);
+			//var key=$('#main-search');
+			if(key!=="")
+			{
+				var filterCountry=$('#filterCountry').val();
+				var filterContinent=$('#filterContinent').val();
+				var yearFrom = $('#yearFrom').val();
+				var yearTo = $('#yearTo').val();
+				var genre = $('.genre:checked').map(function() {
+				    return this.value;
+				}).get();
+				var parameters={key: key, filterCountry: filterCountry, filterContinent: filterContinent, yearFrom: yearFrom, yearTo: yearTo};
+				if(genre!=null)
+					parameters['genres']=genre;
+				$('#search-songs').html("<table><tr><th>Pesme</th></tr>");
+				$('#search-albums').html("<table><tr><th>Albumi</th></tr>");
+				var html="";
+				$.get( '/mainsearch',parameters, function(data) {$.each( data.songs, function( key, value ) {
+					//html+="<h2>"+value.name+"</h2>";
+					//alert(value);
+					$('#search-songs').append("<tr><td style='width: 400px;'><a href='/showSong/"+value._id+"'>"+value.name+"</a></td></tr>");
+					});
+					$('#search-songs').append("</table>");
+					$.each( data.albums, function( key, value ) {
+					//html+="<h2>"+value.name+"</h2>";
+					//alert(value);
+					$('#search-albums').append("<tr><td style='width: 400px;'><a href='/showAlbum/"+value._id+"'>"+value.name+"</a></td></tr>");
+					});
+					$('#search-albums').append("</table>");
+
+					///artists
+					$('#search-artists').html("<table><tr><th>Izvodjaci</th></tr>");
+					$.each( data.artists, function( key, value ) {
+					$('#search-artists').append("<tr><td style='width: 400px;'><a href='/showArtist/"+value._id+"'>"+value.name+"</a></td></tr>");
+					});
+					$('#search-artists').append("</table>");
+					///
+				});
+				//$('#search-songs').html(html);
+				$('#search-songs').css("background-color", "white");
+				$('#search-albums').css("background-color", "white");
+				$('#search-artists').css("background-color", "white");
+			}
+			else
+			{
+				$('#search-songs').html("");
+				$('#search-albums').html("");
+				$('#search-artists').html("");
+			}
+		}
+
+
+
